@@ -28,7 +28,7 @@ public class PrimeFactorsTest {
 	}
 
 	@Test
-	public void oneTest() {
+	public void one() {
 		Integer one = 1;
 		ArrayList<Integer> expected = new ArrayList<Integer>();
 		expected.add(one);
@@ -36,7 +36,7 @@ public class PrimeFactorsTest {
 	}
 	
 	@Test
-	public void twoTest() {
+	public void two() {
 		Integer two = 2;
 		ArrayList<Integer> expected = new ArrayList<Integer>();
 		expected.add(two);
