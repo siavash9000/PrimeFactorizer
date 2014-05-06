@@ -61,6 +61,16 @@ public class PrimeFactorsTest {
 	public void nine() {
 		Assert.assertEquals(generateListWithElements(3,3),factorizer.factorize(9));
 	}
+	
+	@Test
+	public void ninetynine() {
+		Assert.assertEquals(generateListWithElements(3,3,11),factorizer.factorize(99));
+	}
+	
+	@Test
+	public void seventyone() {
+		Assert.assertEquals(generateListWithElements(71),factorizer.factorize(71));
+	}
 
 	private ArrayList<Integer> generateListWithElements(int... elements) {
 		ArrayList<Integer> list = new ArrayList<Integer>();
