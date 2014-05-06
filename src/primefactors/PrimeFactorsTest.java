@@ -29,35 +29,46 @@ public class PrimeFactorsTest {
 
 	@Test
 	public void one() {
-		Integer one = 1;
-		ArrayList<Integer> expected = new ArrayList<Integer>();
-		expected.add(one);
-		Assert.assertEquals(expected,factorizer.factorize(one));
+		Assert.assertEquals(generateListWithElements(),factorizer.factorize(1));
 	}
 	
 	@Test
 	public void two() {
-		Integer two = 2;
-		ArrayList<Integer> expected = new ArrayList<Integer>();
-		expected.add(two);
-		Assert.assertEquals(expected,factorizer.factorize(two));
+		Assert.assertEquals(generateListWithElements(2),factorizer.factorize(2));
 	}
 	
 	@Test
 	public void three() {
-		Integer three = 3;
-		ArrayList<Integer> expected = new ArrayList<Integer>();
-		expected.add(three);
-		Assert.assertEquals(expected,factorizer.factorize(three));
+		Assert.assertEquals(generateListWithElements(3),factorizer.factorize(3));
 	}
 	
 	@Test
 	public void four() {
-		Integer four = 4;
-		ArrayList<Integer> expected = new ArrayList<Integer>();
-		expected.add(2);
-		expected.add(2);
-		Assert.assertEquals(expected,factorizer.factorize(four));
+		Assert.assertEquals(generateListWithElements(2,2),factorizer.factorize(4));
+	}
+	
+	@Test
+	public void six() {
+		Assert.assertEquals(generateListWithElements(2,3),factorizer.factorize(6));
+	}
+	
+	@Test
+	public void eight() {
+		Assert.assertEquals(generateListWithElements(2,2,2),factorizer.factorize(8));
+	}
+	
+	@Test
+	public void nine() {
+		Assert.assertEquals(generateListWithElements(3,3),factorizer.factorize(9));
 	}
 
+	private ArrayList<Integer> generateListWithElements(int... elements) {
+		ArrayList<Integer> list = new ArrayList<Integer>();
+		for (int current: elements){
+			list.add(current);
+		}
+		return list;
+	}
+	
+	
 }
