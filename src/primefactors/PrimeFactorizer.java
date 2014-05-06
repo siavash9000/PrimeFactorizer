@@ -10,12 +10,16 @@ public class PrimeFactorizer {
 		}
 		ArrayList<Integer> primeFactors = new ArrayList<Integer>();
 		int factorCandidate=2;
-		while(toBeFactorized>1){
-			while (toBeFactorized % factorCandidate == 0) {
+		int upperBound = (int) Math.ceil(Math.sqrt(toBeFactorized));
+		while(factorCandidate <=  upperBound){
+			while(toBeFactorized % factorCandidate == 0) {
 				primeFactors.add(factorCandidate);
 				toBeFactorized /= factorCandidate;
 			}
 			factorCandidate++;
+		}
+		if(toBeFactorized>1){
+			primeFactors.add(toBeFactorized);
 		}
 		return primeFactors;
 	}
