@@ -4,17 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TrialDivision implements IntegerFactorizer {
-	/* (non-Javadoc)
-	 * @see primefactors.IntegerFactorizer#factorize(java.lang.Integer)
-	 */
 	@Override
-	public List<Integer> factorize(Integer toBeFactorized) {
+	public List<Long> factorize(Long toBeFactorized) {
 		if (toBeFactorized <= 0) {
 			throw new IllegalArgumentException("Argument must be greater 0.");
 		}
-		ArrayList<Integer> primeFactors = new ArrayList<Integer>();
-		int factorCandidate=2;
-		int upperBound = (int) Math.ceil(Math.sqrt(toBeFactorized));
+		ArrayList<Long> primeFactors = new ArrayList<Long>();
+		long factorCandidate=2;
+		long upperBound = (long) Math.ceil(Math.sqrt(toBeFactorized));
 		while(factorCandidate <=  upperBound){
 			while(toBeFactorized % factorCandidate == 0) {
 				primeFactors.add(factorCandidate);
