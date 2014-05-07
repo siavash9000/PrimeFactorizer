@@ -1,4 +1,4 @@
-package primefactors;
+package primefactorizer;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -6,6 +6,8 @@ import java.util.Random;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import primefactors.IntegerFactorizer;
+import primefactors.TrialDivision;
 
 public class TrialDivisionTest {
 	private IntegerFactorizer factorizer;
