@@ -18,20 +18,18 @@ public class PerformanceComparator {
 		return length;
 	}
 	
-	public float lengthOfHeavyComputation() {
+	public Double lengthOfHeavyComputation() {
 		PerformanceComparator comparator = new PerformanceComparator(new TrialDivision());
 		Random random = new Random();
-		long lowerBound = Long.MAX_VALUE - 1000000000000000000L;
-		int randomRange = 1000000;
-		long toBeFactorized = lowerBound+random.nextInt(randomRange);
+		long toBeFactorized = 8223372036855449890L;
 		System.out.println(toBeFactorized);
-		float computationLength = comparator.getComputationLengthInMilliseconds(toBeFactorized)/1000;
+        Double computationLength =  new Double(comparator.getComputationLengthInMilliseconds(toBeFactorized))/1000;
 		return computationLength;
 	}
 	
 	public static void main(String[] args) {
 		PerformanceComparator performanceComparator = new PerformanceComparator(new TrialDivision());
-		float computationLength = performanceComparator.lengthOfHeavyComputation();
+        Double computationLength = performanceComparator.lengthOfHeavyComputation();
 		System.out.println(String.format("Factorization of took %f seconds.",computationLength));
 	}
 }
