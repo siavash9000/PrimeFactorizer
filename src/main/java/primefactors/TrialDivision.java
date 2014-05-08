@@ -5,7 +5,7 @@ import java.util.List;
 
 public class TrialDivision implements IntegerFactorizer {
 	@Override
-	public List<Long> factorize(Long toBeFactorized) {
+	public List<Long> factorize(long toBeFactorized) {
 		if (toBeFactorized <= 0) {
 			throw new IllegalArgumentException("Argument must be greater 0.");
 		}

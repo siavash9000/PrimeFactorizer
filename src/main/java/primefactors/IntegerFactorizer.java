@@ -4,6 +4,6 @@ import java.util.List;
 
 public interface IntegerFactorizer {
 
-	public abstract List<Long> factorize(Long toBeFactorized);
+	public abstract List<Long> factorize(long toBeFactorized);
 
 }
