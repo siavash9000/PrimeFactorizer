@@ -1,20 +1,23 @@
-package primefactors;
+package primefactorizer;
+
+import primefactorizer.parallel.TrialDivisionExecutorService;
+import primefactorizer.sequential.TrialDivision;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class PerformanceComparator {
-	private List<IntegerFactorizer> factorizers;
+	private List<IntegerFactorizerInterface> factorizers;
 	
 	public PerformanceComparator() {
-		this.factorizers = new ArrayList<IntegerFactorizer>();
+		this.factorizers = new ArrayList<IntegerFactorizerInterface>();
 	}
 
-    public void addFactorizerToComparison(IntegerFactorizer factorizer){
+    public void addFactorizerToComparison(IntegerFactorizerInterface factorizer){
         this.factorizers.add(factorizer);
     }
 
-    public long getComputationLengthInMilliseconds(long toBeFactorized, IntegerFactorizer factorizer) {
+    public long getComputationLengthInMilliseconds(long toBeFactorized, IntegerFactorizerInterface factorizer) {
 		long start = System.currentTimeMillis();
 		List<Long> result = factorizer.factorize(toBeFactorized);
 		long length = System.currentTimeMillis() - start;
@@ -23,7 +26,7 @@ public class PerformanceComparator {
 	}
 	
 	public void compareFactorizersForInput(long toBeFactorized) {
-        for (IntegerFactorizer current: factorizers) {
+        for (IntegerFactorizerInterface current: factorizers) {
             Double computationLength = new Double(getComputationLengthInMilliseconds(toBeFactorized,current)) / 1000;
             System.out.println(String.format("Time of run for %s: %f seconds.", current.getClass().getName(), computationLength));
         }

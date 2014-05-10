@@ -1,9 +1,11 @@
-package primefactors;
+package primefactorizer.parallel;
+
+import primefactorizer.IntegerFactorizerInterface;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class TrialDivisionExecutorService implements IntegerFactorizer {
+public class TrialDivisionExecutorService implements IntegerFactorizerInterface {
 
     private int numberOfCores = Runtime.getRuntime().availableProcessors();
 

@@ -1,18 +1,16 @@
-package primefactorizer;
+package primefactorizer.parallel;
 
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
-import primefactors.IntegerFactorizer;
-import primefactors.TrialDivision;
-import primefactors.TrialDivisionExecutorService;
+import primefactorizer.IntegerFactorizerInterface;
+import primefactorizer.sequential.TrialDivision;
 
 import java.util.ArrayList;
 
 public class TrialDivisionExecutorServiceTest {
-	private IntegerFactorizer executorServiceFactorizer;
-    private IntegerFactorizer trialDivisionFactorizer;
+	private IntegerFactorizerInterface executorServiceFactorizer;
+    private IntegerFactorizerInterface trialDivisionFactorizer;
 
 	@Before
 	public void setup() {

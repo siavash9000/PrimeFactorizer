@@ -1,16 +1,14 @@
-package primefactorizer;
+package primefactorizer.sequential;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import primefactors.IntegerFactorizer;
-import primefactors.TrialDivision;
+import primefactorizer.IntegerFactorizerInterface;
 
 public class TrialDivisionTest {
-	private IntegerFactorizer factorizer;
+	private IntegerFactorizerInterface factorizer;
 	@Before
 	public void setup() {
 		factorizer = new TrialDivision();

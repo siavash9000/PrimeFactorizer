@@ -1,9 +1,11 @@
-package primefactors;
+package primefactorizer.sequential;
+
+import primefactorizer.IntegerFactorizerInterface;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class TrialDivision implements IntegerFactorizer {
+public class TrialDivision implements IntegerFactorizerInterface {
 	@Override
 	public List<Long> factorize(long toBeFactorized) {
 		if (toBeFactorized <= 0) {
