@@ -25,7 +25,7 @@ public class PerformanceComparator {
 	public void compareFactorizersForInput(long toBeFactorized) {
         for (IntegerFactorizer current: factorizers) {
             Double computationLength = new Double(getComputationLengthInMilliseconds(toBeFactorized,current)) / 1000;
-            System.out.println(String.format("Time for %s of run: %f seconds.", current.getClass().getName(), computationLength));
+            System.out.println(String.format("Time of run for %s: %f seconds.", current.getClass().getName(), computationLength));
         }
 	}
 
