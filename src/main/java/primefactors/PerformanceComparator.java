@@ -1,37 +1,41 @@
 package primefactors;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class PerformanceComparator {
-	private IntegerFactorizer factorizer;
+	private List<IntegerFactorizer> factorizers;
 	
-	public PerformanceComparator(IntegerFactorizer factorizer) {
-		this.factorizer = factorizer;
-	}
-	public long getComputationLengthInMilliseconds(long toBeFactorized) {
-		long start = System.currentTimeMillis();
-		factorizer.factorize(toBeFactorized);
-		long length = System.currentTimeMillis() - start;
-		return length;
-	}
-	
-	public Double lengthOfHeavyComputation(long toBeFactorized) {
-        Double computationLength =  new Double(getComputationLengthInMilliseconds(toBeFactorized))/1000;
-		return computationLength;
+	public PerformanceComparator() {
+		this.factorizers = new ArrayList<IntegerFactorizer>();
 	}
 
-    public double getMeanOfRuns(int numberOfRuns, long toBeFactorized) {
-        double mean=0;
-        for (int i=0;i<numberOfRuns;i++){
-            mean += lengthOfHeavyComputation(toBeFactorized);
-        }
-        mean /= numberOfRuns;
-        return mean;
+    public void addFactorizerToComparison(IntegerFactorizer factorizer){
+        this.factorizers.add(factorizer);
     }
+
+    public long getComputationLengthInMilliseconds(long toBeFactorized, IntegerFactorizer factorizer) {
+		long start = System.currentTimeMillis();
+		List<Long> result = factorizer.factorize(toBeFactorized);
+		long length = System.currentTimeMillis() - start;
+        System.out.println(result);
+        return length;
+	}
+	
+	public void compareFactorizersForInput(long toBeFactorized) {
+        for (IntegerFactorizer current: factorizers) {
+            Double computationLength = new Double(getComputationLengthInMilliseconds(toBeFactorized,current)) / 1000;
+            System.out.println(String.format("Time for %s of run: %f seconds.", current.getClass().getName(), computationLength));
+        }
+	}
+
 	
 	public static void main(String[] args) {
-		PerformanceComparator performanceComparator = new PerformanceComparator(new TrialDivision());
-        Double computationLength = performanceComparator.getMeanOfRuns(10, 82233720368554498L);
-		System.out.println(String.format("Mean of %d runs: %f seconds.",10,computationLength));
-	}
+		PerformanceComparator performanceComparator = new PerformanceComparator();
+        performanceComparator.addFactorizerToComparison(new TrialDivision());
+        performanceComparator.addFactorizerToComparison(new TrialDivisionExecutorService());
+        performanceComparator.compareFactorizersForInput(8223372036855449890L);
+
+
+    }
 }
