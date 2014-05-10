@@ -64,7 +64,7 @@ public class TrialDivisionExecutorService implements IntegerFactorizerInterface 
     private List<List<Long>> solveSubProblems(long toBeFactorized) {
         long upperbound = (long) Math.ceil(Math.sqrt(toBeFactorized));
         long intervalLength = upperbound / numberOfCores;
-        List<List<Long>> partialResults = new ArrayList<List<Long>>();
+        List<List<Long>> partialResults = Collections.synchronizedList(new ArrayList<List<Long>>());
         List<SubFactorizer> subProblems = new ArrayList<SubFactorizer>();
         subProblems.add(new SubFactorizer(toBeFactorized,2,intervalLength,partialResults));
         for(int i=1;i<numberOfCores-1;i++){
