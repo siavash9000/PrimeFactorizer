@@ -2,49 +2,45 @@ package primefactorizer.parallel;
 
 import primefactorizer.IntegerFactorizerInterface;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.*;
+import java.util.concurrent.*;
+
+class SubFactorizer implements Callable<List<Long>> {
+    long toBeFactorized,start,end;
+    public SubFactorizer(long toBeFactorized,long start,long end){
+        this.toBeFactorized=toBeFactorized;
+        this.start=start;
+        this.end=end;
+    }
+
+    @Override
+    public List<Long> call() {
+        return findFactorsInRange(toBeFactorized,start,end);
+    }
+
+    private List<Long> findFactorsInRange(long toBeFactorized, long start, long end) {
+        ArrayList<Long> primeFactors = new ArrayList<Long>();
+        long factorCandidate=start;
+        while(factorCandidate <=  end){
+            while(toBeFactorized % factorCandidate == 0) {
+                primeFactors.add(factorCandidate);
+                toBeFactorized /= factorCandidate;
+            }
+            factorCandidate++;
+        }
+        //toBeFactorized must be prime now or 1
+        if(toBeFactorized>1){
+            primeFactors.add(toBeFactorized);
+        }
+        return primeFactors;
+    }
+}
 
 public class TrialDivisionExecutorService implements IntegerFactorizerInterface {
 
     private int numberOfCores = Runtime.getRuntime().availableProcessors();
-
-    private class SubFactorizer implements Runnable {
-        long toBeFactorized,start,end;
-        boolean computationFinished;
-        List<List<Long>> resultsContainer;
-        public SubFactorizer(long toBeFactorized,long start,long end, List<List<Long>> resultsContainer){
-            this.toBeFactorized=toBeFactorized;this.start=start;this.end=end;this.resultsContainer=resultsContainer;
-            this.computationFinished=false;
-        }
-
-        @Override
-        public void run() {
-            resultsContainer.add(findFactorsInRange(toBeFactorized,start,end));
-            computationFinished=true;
-        }
-
-        private List<Long> findFactorsInRange(long toBeFactorized, long start, long end) {
-            ArrayList<Long> primeFactors = new ArrayList<Long>();
-            long factorCandidate=start;
-            while(factorCandidate <=  end){
-                while(toBeFactorized % factorCandidate == 0) {
-                    primeFactors.add(factorCandidate);
-                    toBeFactorized /= factorCandidate;
-                }
-                factorCandidate++;
-            }
-            //toBeFactorized must be prime now or 1
-            if(toBeFactorized>1){
-                primeFactors.add(toBeFactorized);
-            }
-            return primeFactors;
-        }
-    }
+    private ExecutorService executorService = Executors.newCachedThreadPool();
+    private List<SubFactorizer> subProblems = new ArrayList<SubFactorizer>();
 
     @Override
     public List<Long> factorize(long toBeFactorized) {
@@ -52,10 +48,8 @@ public class TrialDivisionExecutorService implements IntegerFactorizerInterface 
             throw new IllegalArgumentException("Argument must be greater 0.");
         }
         if (toBeFactorized<1000) {
-            ArrayList<List<Long>> partialResults = new ArrayList<List<Long>>();
-            SubFactorizer solver = new SubFactorizer(toBeFactorized,2,toBeFactorized,partialResults);
-            solver.run();
-            return partialResults.get(0);
+            SubFactorizer solver = new SubFactorizer(toBeFactorized,2,toBeFactorized);
+            return solver.call();
         }
         List<List<Long>> partialResults = solveSubProblems(toBeFactorized);
         return merge(partialResults,toBeFactorized);
@@ -64,29 +58,30 @@ public class TrialDivisionExecutorService implements IntegerFactorizerInterface 
     private List<List<Long>> solveSubProblems(long toBeFactorized) {
         long upperbound = (long) Math.ceil(Math.sqrt(toBeFactorized));
         long intervalLength = upperbound / numberOfCores;
-        List<List<Long>> partialResults = Collections.synchronizedList(new ArrayList<List<Long>>());
-        List<SubFactorizer> subProblems = new ArrayList<SubFactorizer>();
-        subProblems.add(new SubFactorizer(toBeFactorized,2,intervalLength,partialResults));
+        long start = 2;
+        ArrayList<Future> solutions = new ArrayList<Future>();
+        solutions.add(executorService.submit(new SubFactorizer(toBeFactorized, start, intervalLength)));
         for(int i=1;i<numberOfCores-1;i++){
-            subProblems.add(new SubFactorizer(toBeFactorized,intervalLength*i+1,intervalLength*(i+1),partialResults));
+            solutions.add(executorService.submit(new SubFactorizer(toBeFactorized, intervalLength*i+1, intervalLength*(i+1))));
         }
-        subProblems.add(new SubFactorizer(toBeFactorized,intervalLength*numberOfCores,upperbound,partialResults));
-        ExecutorService executor = Executors.newCachedThreadPool();
+        solutions.add(executorService.submit(new SubFactorizer(toBeFactorized, intervalLength*numberOfCores, upperbound)));
         for (SubFactorizer subProblem: subProblems){
-            executor.execute(subProblem);
+            solutions.add(executorService.submit(subProblem));
         }
-        while(!allSubproblemsSolved(subProblems));
-        executor.shutdown();
+        List<List<Long>> partialResults = Collections.synchronizedList(new ArrayList<List<Long>>());
+        for (Future<List<Long>> solution: solutions){
+            try {
+                partialResults.add(solution.get());
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+        }
+        executorService.shutdown();
         return partialResults;
     }
 
-    private boolean allSubproblemsSolved(List<SubFactorizer> subProblems) {
-        boolean finished = true;
-        for(SubFactorizer subProblem: subProblems){
-            finished=finished&&subProblem.computationFinished;
-        }
-        return finished;
-    }
     private List<Long> merge(List<List<Long>> partialResults,long toBeFactorized) {
         ArrayList<Long> resultCandidates = new ArrayList<Long>();
         for (List<Long> partial: partialResults){
@@ -111,7 +106,6 @@ public class TrialDivisionExecutorService implements IntegerFactorizerInterface 
                         candidateRedundant = true;
                     }
                 }
-
             }
             if (!candidateRedundant) {
                 result.add(resultCandidates.get(i));

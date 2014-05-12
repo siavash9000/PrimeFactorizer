@@ -14,7 +14,6 @@ public class TrialDivisionExecutorServiceTest {
 
 	@Before
 	public void setup() {
-
         executorServiceFactorizer = new TrialDivisionExecutorService();
         trialDivisionFactorizer = new TrialDivision();
 	}
@@ -96,11 +95,10 @@ public class TrialDivisionExecutorServiceTest {
 
     @Test
     public void checkAgainstBruteforceFour(){
-        for (int j=0;j<100;j++) {
-            for (int i = 0; i < 1000000; i += 1000) {
-                long testValue = new Long(Integer.MAX_VALUE) * (23 * 1);
-                Assert.assertEquals(trialDivisionFactorizer.factorize(testValue), executorServiceFactorizer.factorize(testValue));
-            }
+        for (int j=0;j<200;j++) {
+            long testValue = new Long(Integer.MAX_VALUE);
+            executorServiceFactorizer = new TrialDivisionExecutorService();
+            Assert.assertEquals(trialDivisionFactorizer.factorize(testValue), executorServiceFactorizer.factorize(testValue));
         }
     }
 
